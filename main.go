@@ -15,7 +15,9 @@ limitations under the License.
 */
 package main
 
-import "github.com/SouenMazouin/txt-to-csv/cmd"
+import (
+	"github.com/SouenMazouin/txt-to-csv/cmd"
+)
 
 func main() {
 	cmd.Execute()

@@ -16,11 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
 )
 
@@ -38,7 +39,46 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) { fmt.Println("Hello CLI") },
+	Run: func(cmd *cobra.Command, args []string) {
+		s, _ := cmd.Flags().GetString("src")
+		d, _ := cmd.Flags().GetString("dst")
+		o, _ := cmd.Flags().GetString("odelim")
+		n, _ := cmd.Flags().GetString("ndelim")
+
+		ConvertFile(s, d, o, n)
+	},
+}
+
+func processLine(line, old, new string) (res string) {
+
+	if strings.Contains(line, old) {
+		res = strings.Replace(line, old, new, -1)
+	}
+	return res
+}
+
+func ConvertFile(src, dst, old, new string) (err error) {
+	srcFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	dstFile, err := os.Create(dst + ".csv")
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	scanner := bufio.NewScanner(srcFile)
+	writer := bufio.NewWriter(dstFile)
+	defer writer.Flush()
+
+	for scanner.Scan() {
+		res := processLine(scanner.Text(), old, new)
+		fmt.Fprintf(writer, res)
+	}
+	return nil
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -49,6 +89,10 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.Flags().StringP("src", "s", "", "Source File")
+	rootCmd.Flags().StringP("dst", "d", "", "Destination File")
+	rootCmd.Flags().StringP("odelim", "o", "", "Old delimiter")
+	rootCmd.Flags().StringP("ndelim", "n", "", "New delimiter")
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
