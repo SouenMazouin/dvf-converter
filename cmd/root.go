@@ -49,15 +49,17 @@ to quickly create a Cobra application.`,
 }
 
 func processLine(line, delim string) (res string) {
-
-	// TODO: replace ","" at numbers by "." there is probably a better way to do it
+	res = line
+	//TODO:
+	// - replace "," notation at numbers by "." notation, there is probably a better way to do it
 	if strings.Contains(line, ",") {
 		res = strings.Replace(line, ",", ".", -1)
 	}
 
-	// TODO: leave the choice of delimiter with default value at ","
-	if strings.Contains(line, delim) {
-		res = strings.Replace(line, delim, ",", -1)
+	// TODO:
+	// - leave the choice of delimiter with default value at ","
+	if strings.Contains(line, delim) || strings.Contains(line, ",") {
+		res = strings.Replace(res, delim, ",", -1)
 	}
 	return res
 }
