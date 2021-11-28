@@ -40,31 +40,36 @@ to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		s, _ := cmd.Flags().GetString("src")
-		d, _ := cmd.Flags().GetString("dst")
-		o, _ := cmd.Flags().GetString("odelim")
-		n, _ := cmd.Flags().GetString("ndelim")
+		i, _ := cmd.Flags().GetString("in")
+		o, _ := cmd.Flags().GetString("out")
+		d, _ := cmd.Flags().GetString("delim")
 
-		ConvertFile(s, d, o, n)
+		ConvertFile(i, o, d)
 	},
 }
 
-func processLine(line, old, new string) (res string) {
+func processLine(line, delim string) (res string) {
 
-	if strings.Contains(line, old) {
-		res = strings.Replace(line, old, new, -1)
+	// TODO: replace ","" at numbers by "." there is probably a better way to do it
+	if strings.Contains(line, ",") {
+		res = strings.Replace(line, ",", ".", -1)
+	}
+
+	// TODO: leave the choice of delimiter with default value at ","
+	if strings.Contains(line, delim) {
+		res = strings.Replace(line, delim, ",", -1)
 	}
 	return res
 }
 
-func ConvertFile(src, dst, old, new string) (err error) {
-	srcFile, err := os.Open(src)
+func ConvertFile(in, out, delim string) (err error) {
+	srcFile, err := os.Open(in)
 	if err != nil {
 		return err
 	}
 	defer srcFile.Close()
 
-	dstFile, err := os.Create(dst + ".csv")
+	dstFile, err := os.Create(out + ".csv")
 	if err != nil {
 		return err
 	}
@@ -72,12 +77,18 @@ func ConvertFile(src, dst, old, new string) (err error) {
 
 	scanner := bufio.NewScanner(srcFile)
 	writer := bufio.NewWriter(dstFile)
+
 	defer writer.Flush()
 
 	for scanner.Scan() {
-		res := processLine(scanner.Text(), old, new)
-		fmt.Fprintf(writer, res)
+		line := processLine(scanner.Text(), delim)
+
+		_, err = fmt.Fprintln(writer, line)
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 
@@ -89,10 +100,9 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.Flags().StringP("src", "s", "", "Source File")
-	rootCmd.Flags().StringP("dst", "d", "", "Destination File")
-	rootCmd.Flags().StringP("odelim", "o", "", "Old delimiter")
-	rootCmd.Flags().StringP("ndelim", "n", "", "New delimiter")
+	rootCmd.Flags().StringP("in", "i", "", "Input source file")
+	rootCmd.Flags().StringP("out", "o", "", "Output dest file")
+	rootCmd.Flags().StringP("delim", "d", "", "Current delimiter of input file")
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
