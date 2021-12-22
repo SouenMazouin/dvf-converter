@@ -1,4 +1,4 @@
-module github.com/SouenMazouin/txt-to-csv
+module github.com/SouenMazouin/dvf-converter
 
 go 1.17
 

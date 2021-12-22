@@ -1,6 +1,11 @@
-# Txt to CSV tool
+# DVF Converter
 
-### Todos :
+## Features
+- TXT to CSV
+- TXT to JSON
+- CSV to JSON
+
+#### Todos :
 - Improve errors management
 - Add tests
 - Improve & customize CLI

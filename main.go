@@ -16,7 +16,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/SouenMazouin/txt-to-csv/cmd"
+	"github.com/SouenMazouin/dvf-converter/cmd"
 )
 
 func main() {
