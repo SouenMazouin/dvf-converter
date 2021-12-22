@@ -8,6 +8,7 @@
 #### Todos :
 - Improve errors management
 - Add tests
-- Improve & customize CLI
+- Add TXT to JSON feat
+- Add CSV to JSON feat
 - Improve delimiters management 
 - Add documentation
