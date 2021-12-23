@@ -16,7 +16,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/SouenMazouin/dvf-converter/cmd"
+	"github.com/SouenMazouin/fcvrt/cmd"
 )
 
 func main() {

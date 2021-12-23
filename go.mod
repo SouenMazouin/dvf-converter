@@ -1,4 +1,4 @@
-module github.com/SouenMazouin/dvf-converter
+module github.com/SouenMazouin/fcvrt
 
 go 1.17
 

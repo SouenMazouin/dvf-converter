@@ -23,7 +23,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "dvf-converter",
+	Use:   "fcvrt",
 	Short: "A simple tool for convert DVF files",
 	Run:   func(cmd *cobra.Command, args []string) { fmt.Println("A simple tool for convert DVF files") },
 }
