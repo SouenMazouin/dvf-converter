@@ -15,7 +15,7 @@ import (
 
 var TxtToCsvCmd = &cobra.Command{
 	Use:   "TxtToCsv",
-	Short: "Transform DVF txt files to csv",
+	Short: "Convert DVF TXT files to CSV",
 	Run: func(cmd *cobra.Command, args []string) {
 		i, _ := cmd.Flags().GetString("in")
 		o, _ := cmd.Flags().GetString("out")
@@ -25,7 +25,7 @@ var TxtToCsvCmd = &cobra.Command{
 	},
 }
 
-func processLine(line, delim string) (res string) {
+func processTxtLine(line, delim string) (res string) {
 	res = line
 	//TODO:
 	// - replace "," notation at numbers by "." notation, there is probably a better way to do it
@@ -65,7 +65,7 @@ func ConvertTxtToCsv(in, out, delim string) (err error) {
 	defer writer.Flush()
 
 	for scanner.Scan() {
-		line := processLine(scanner.Text(), delim)
+		line := processTxtLine(scanner.Text(), delim)
 
 		_, err = fmt.Fprintln(writer, line)
 		if err != nil {
